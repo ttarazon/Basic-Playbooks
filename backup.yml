@@ -1,0 +1,19 @@
+- name: "Play1: Backup Running-Configuration"
+  hosts: POD2
+  connection: local
+  tasks:
+    - name: "Task1 - Copy Running-Configuration"
+      ios_command:
+        commands: "show run"
+      register: cli_result
+    
+    - name: "Task2 - Create output folder"
+      file: 
+        path: "outputs"
+        state: directory
+      run_once: true
+    
+    - name: "Task3 - Write output to file"
+      copy: 
+        content: "{{ cli_result.stdout[0] }}\n"
+        dest: "backup-of-running-configs/{{ inventory_hostname }}.txt"
