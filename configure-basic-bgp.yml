@@ -1,0 +1,22 @@
+---
+- name: "PLAY 1: Get all the BGP parameters"
+  vars_prompt:
+    - name: "bgp_asn"
+      prompt: "Enter the BGP ASN"
+      private: no
+    - name: "bgp_peer"
+      prompt: "Enter BGP Peer IPv4 Address"
+      private: no
+    - name: "bgp_remote_as"
+      prompt: "Enter BGP Peer ASN"
+      private: no
+  hosts: "me{{ me_num }}"
+  tasks:
+    - name: "TASK 0: Build BGP Configuration"
+      ios_config:
+        lines:
+          - "router bgp {{ bgp_asn }}"
+          - "no bgp def ipv4"
+          - "neighbor {{ bgp_peer }} remote-as {{ bgp_remote_as }}"
+          - "address-family ipv4 unicast"
+          - "neighbor {{ bgp_peer }} activate"
